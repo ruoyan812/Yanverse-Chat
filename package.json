@@ -1,0 +1,15 @@
+{
+  "name": "cloud-chat-rooms",
+  "version": "1.0.0",
+  "description": "基于 Cloudflare Workers + Durable Objects 的实时聊天房间网站",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:pages": "wrangler pages deploy public",
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260828.1",
+    "wrangler": "^4.127.0"
+  }
+}

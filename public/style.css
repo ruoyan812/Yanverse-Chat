@@ -1,0 +1,439 @@
+:root {
+  --bg: #0f1225;
+  --bg-soft: #171a3a;
+  --card: #1d2147;
+  --card-hover: #252a58;
+  --border: #2f3568;
+  --text: #eef0ff;
+  --text-dim: #9aa0cf;
+  --accent: #6c5ce7;
+  --accent-2: #00cec9;
+  --danger: #ff6b6b;
+  --radius: 14px;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(1000px 600px at 10% -10%, rgba(108, 92, 231, 0.35), transparent 60%),
+    radial-gradient(800px 500px at 110% 20%, rgba(0, 206, 201, 0.25), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 入口 ===== */
+#lobby {
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.hero { text-align: center; margin-bottom: 28px; }
+.hero .logo { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(108,92,231,.5)); }
+.hero h1 { font-size: 44px; margin: 10px 0 6px; letter-spacing: 2px; }
+.hero .tagline { color: var(--text-dim); font-size: 16px; }
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(29, 33, 71, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: var(--shadow);
+}
+
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus { border-color: var(--accent); }
+.field input::placeholder { color: #5d6290; }
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 18px;
+  padding: 4px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+}
+.tab {
+  flex: 1;
+  padding: 9px 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab.active {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+
+.panel { animation: fadeIn 0.25s ease; }
+.panel.hidden { display: none; }
+
+.btn {
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn.primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  color: #fff;
+}
+.btn.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(108,92,231,.4); }
+.btn.primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn.wide { width: 100%; margin-bottom: 14px; font-size: 15px; padding: 14px; }
+.btn.ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn.ghost:hover { color: var(--text); border-color: var(--accent); }
+.btn.danger {
+  background: transparent;
+  color: #e5484d;
+  border: 1px solid rgba(229, 72, 77, 0.5);
+}
+.btn.danger:hover { background: rgba(229, 72, 77, 0.1); }
+.btn.small { padding: 6px 14px; font-size: 13px; border-radius: 8px; }
+
+.error {
+  margin-top: 14px;
+  min-height: 18px;
+  font-size: 13px;
+  color: var(--danger);
+  text-align: center;
+}
+
+.foot { margin-top: 24px; color: #565b85; font-size: 12px; }
+
+/* ===== 聊天室 ===== */
+#chat { background: var(--bg); }
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.room-info { display: flex; align-items: baseline; gap: 12px; }
+.room-name { font-size: 19px; font-weight: 700; }
+.room-code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 13px;
+  color: var(--accent-2);
+  background: rgba(0,206,201,.12);
+  padding: 3px 10px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+}
+.room-meta { display: flex; align-items: center; gap: 14px; }
+.online { font-size: 13px; color: var(--text-dim); }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: calc(100vh - 130px);
+  scroll-behavior: smooth;
+}
+
+.msg {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.5;
+  font-size: 15px;
+  word-break: break-word;
+  animation: pop 0.2s ease;
+}
+.msg .meta { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+.msg.own {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  border-bottom-right-radius: 4px;
+}
+.msg.own .meta { color: rgba(255,255,255,.75); }
+.msg.other {
+  align-self: flex-start;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+.msg.system {
+  align-self: center;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  max-width: 100%;
+  padding: 4px 10px;
+  text-align: center;
+}
+
+.history-divider {
+  align-self: center;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 12px 10px 6px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.composer {
+  display: flex;
+  gap: 12px;
+  padding: 14px 22px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+.composer input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+}
+.composer input:focus { border-color: var(--accent); }
+.composer .btn.primary { width: auto; padding: 12px 26px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
+@keyframes pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; } }
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+@media (max-width: 520px) {
+  .msg { max-width: 85%; }
+  .chat-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .room-meta { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ===== Toast ===== */
+#toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--card);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 200;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===== 在线房间搜索列表 ===== */
+.divider-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 4px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.divider-line::before,
+.divider-line::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.room-list {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-soft);
+  padding: 8px;
+}
+.room-list-title {
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 2px 6px 8px;
+}
+.room-list-items { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+.room-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.room-item:hover { border-color: var(--accent); transform: translateY(-1px); }
+.room-item .room-item-name { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.room-item .room-item-meta { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+.room-item .room-item-code { color: var(--accent); font-family: var(--mono, monospace); }
+.hint { text-align: center; color: var(--text-dim); font-size: 13px; padding: 8px; }
+
+/* ===== 弹窗 ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 10, 28, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+.modal {
+  width: 320px;
+  max-width: 90vw;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  animation: pop 0.2s ease;
+}
+.modal h3 { font-size: 17px; margin-bottom: 14px; }
+.modal input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+}
+.modal input:focus { border-color: var(--accent); }
+.modal .error { text-align: left; margin-top: 8px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-actions .btn { width: auto; flex: 1; }
+.modal-actions .btn.primary { width: auto; }
+
+/* ===== 入房公告弹窗 ===== */
+.notice-modal { width: 380px; }
+.notice-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+/* ===== 管理员功能 ===== */
+#btn-admin.active {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.modal .field { margin-bottom: 12px; }
+.modal .field label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.admin-tip {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+}
+.admin-tip b { color: var(--text); }
+.admin-tip.danger-text {
+  color: #e5484d;
+  background: rgba(229, 72, 77, 0.08);
+}
+.admin-panel-view { display: block; }
+
+/* 消息上的管理员操作按钮：悬停消息时显示 */
+.msg { position: relative; }
+.msg .admin-actions {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  gap: 6px;
+}
+.msg:hover .admin-actions { display: inline-flex; }
+.admin-btn {
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #fff;
+  background: rgba(255, 107, 107, 0.85);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  line-height: 1.6;
+  transition: background 0.15s;
+}
+.admin-btn:hover { background: var(--danger); }
+.msg.own .admin-actions { right: auto; left: 8px; }

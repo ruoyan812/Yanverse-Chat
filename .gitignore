@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.wranglerignore
+src/assets.ts
+*.log
+start-dev.ps1

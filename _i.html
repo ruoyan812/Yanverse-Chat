@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yanverse Chat</title>
+  <link rel="stylesheet" href="/style.css?v=3ef87a890a" />
+  <link rel="icon" type="image/svg+xml" href="https://img.roooooyan.work/file/favicon.svg" />
+</head>
+<body>
+  <!-- ===== 入口视图 ===== -->
+  <div id="lobby" class="screen">
+    <div class="hero">
+      <img class="logo" src="https://img.roooooyan.work/file/favicon.svg" alt="Yanverse Chat" />
+      <h1>Yanverse Chat</h1>
+      <p class="tagline">在网上的房间里，和陌生人实时对话</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>你的昵称</label>
+        <input id="nickname" type="text" maxlength="36" placeholder="输入一个昵称，默认为随机 UUID" autocomplete="off" />
+      </div>
+
+      <button id="btn-default" class="btn primary wide">进入默认房间 Yanverse</button>
+
+      <div class="tabs">
+        <button id="tab-join" class="tab active">加入房间</button>
+        <button id="tab-create" class="tab">创建房间</button>
+      </div>
+
+      <div id="panel-join" class="panel">
+        <div class="field">
+          <label>房间号</label>
+          <input id="room-code" type="text" maxlength="6" placeholder="例如：A1B2C3" autocomplete="off" />
+        </div>
+        <button id="btn-join" class="btn primary">进入房间</button>
+
+        <div class="divider-line"><span>或搜索在线房间</span></div>
+
+        <div class="field">
+          <label>按房间名搜索</label>
+          <input id="room-search" type="text" maxlength="30" placeholder="输入房间名关键词" autocomplete="off" />
+        </div>
+        <div id="room-list" class="room-list hidden">
+          <div class="room-list-title">在线房间</div>
+          <div id="room-list-items"></div>
+          <p id="room-list-empty" class="hint">没有找到在线房间</p>
+        </div>
+      </div>
+
+      <div id="panel-create" class="panel hidden">
+        <div class="field">
+          <label>房间名称</label>
+          <input id="room-name" type="text" maxlength="30" placeholder="给房间起个名字" autocomplete="off" />
+        </div>
+        <button id="btn-create" class="btn primary">创建并进入</button>
+      </div>
+
+      <p id="lobby-error" class="error"></p>
+    </div>
+
+    <p class="foot">由 Cloudflare Workers + Durable Objects 提供支持</p>
+  </div>
+
+  <!-- ===== 聊天室视图 ===== -->
+  <div id="chat" class="screen hidden">
+    <header class="chat-header">
+      <div class="room-info">
+        <span class="room-name" id="chat-room-name">房间</span>
+        <span class="room-code" id="chat-room-code">—</span>
+      </div>
+      <div class="room-meta">
+        <span class="online" id="online-count">0 人在线</span>
+        <button id="btn-admin" class="btn ghost small">管理</button>
+        <button id="btn-edit-nick" class="btn ghost small">改昵称</button>
+        <button id="btn-edit-room" class="btn ghost small">改房名</button>
+        <button id="btn-leave" class="btn ghost small">退出</button>
+      </div>
+    </header>
+
+    <main id="messages" class="messages"></main>
+
+    <footer class="composer">
+      <input id="chat-input" type="text" maxlength="2000" placeholder="输入消息，回车发送…" autocomplete="off" />
+      <button id="btn-send" class="btn primary">发送</button>
+    </footer>
+  </div>
+
+  <!-- ===== 修改昵称 / 房间名 弹窗 ===== -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3 id="edit-title">修改昵称</h3>
+      <input id="edit-input" type="text" maxlength="20" placeholder="请输入新内容" autocomplete="off" />
+      <p id="edit-error" class="error"></p>
+      <div class="modal-actions">
+        <button id="edit-cancel" class="btn ghost">取消</button>
+        <button id="edit-confirm" class="btn primary">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 管理弹窗（登录 / 管理面板） ===== -->
+  <div id="admin-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div id="admin-login-view">
+        <h3>管理员登录</h3>
+        <input id="admin-pass" type="password" maxlength="64" placeholder="请输入管理员密码" autocomplete="off" />
+        <p id="admin-error" class="error"></p>
+        <div class="modal-actions">
+          <button id="admin-cancel" class="btn ghost">取消</button>
+          <button id="admin-login" class="btn primary">登录</button>
+        </div>
+      </div>
+      <div id="admin-panel-view" class="hidden">
+        <h3>管理员控制台</h3>
+        <div class="admin-tip">当前房间：<b id="admin-room-label">—</b></div>
+        <div class="field">
+          <label>发布系统公告</label>
+          <input id="admin-announce-input" type="text" maxlength="2000" placeholder="输入公告内容，将广播给房间所有用户" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>房间状态</label>
+          <p class="admin-tip" id="admin-room-status">—</p>
+        </div>
+        <div class="modal-actions">
+          <button id="admin-close-room" class="btn danger">关闭房间</button>
+          <button id="admin-open-room" class="btn ghost hidden">重新打开房间</button>
+          <button id="admin-reset-room" class="btn danger">重置房间</button>
+          <button id="admin-announce" class="btn primary">发布公告</button>
+          <button id="admin-exit" class="btn ghost">退出管理</button>
+        </div>
+        <p id="admin-panel-error" class="error"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js?v=bbb241b7c4"></script>
+</body>
+</html>
