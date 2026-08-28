@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Reinstall Typescript
+        run: npx --package typescript tsc --noEmit
+        
       - name: Build static assets
         run: npm run build
 
