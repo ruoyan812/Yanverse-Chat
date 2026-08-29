@@ -1,4 +1,4 @@
-# 云聊 💬 — 实时聊天房间网站
+# Yanverse Chat 💬 — 实时聊天房间网站
 
 一个基于 **Cloudflare Workers + Durable Objects** 的实时聊天网站。用户可以创建房间，其他人通过**房间名 / 房间号**加入房间，进行多人实时对话。
 
